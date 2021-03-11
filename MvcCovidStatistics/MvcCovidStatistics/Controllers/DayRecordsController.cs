@@ -22,7 +22,11 @@ namespace MvcCovidStatistics.Controllers
         // GET: DayRecords
         public async Task<IActionResult> Index()
         {
-            return View(await _context.DayRecords.ToListAsync());
+            var dayRecord = from d in _context.DayRecords
+                            select d;
+            dayRecord = dayRecord.OrderByDescending(d => d.Date);
+            
+            return View(await dayRecord.ToListAsync());
         }
 
         // GET: DayRecords/Details/5
