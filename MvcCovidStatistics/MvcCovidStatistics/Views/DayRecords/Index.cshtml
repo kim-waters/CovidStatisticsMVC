@@ -9,17 +9,21 @@
 }
 
 <h1>Index</h1>
+<div class="d-flex justify-content-around">
+    <div>
+        <h4>Cases</h4>
+        <div id="container">
+            <canvas id="myChart"></canvas>
+        </div>
+    </div>
 
-<h4>Cases</h4>
-<div id="container">
-    <canvas id="myChart"></canvas>
+    <div>
+        <h4>Vaccinations</h4>
+        <div id="container">
+            <canvas id="vacChart"></canvas>
+        </div>
+    </div>
 </div>
-
-<h4>Vaccinations</h4>
-<div id="container">
-    <canvas id="vacChart"></canvas>
-</div>
-
 @if (SignInManager.IsSignedIn(User))
 {
     <p>
@@ -80,7 +84,7 @@
 
 
         window.onload = function () {
-           @{ 
+           @{
                string deathRecords = "";
                string vacRecords = "";
                string recRecords = "";
@@ -88,7 +92,8 @@
                string dateRecords = "";
            }
 
-           @foreach(var item in Model)
+            
+        @foreach(var item in Model.OrderBy(d => d.Date))
            {
                deathRecords += item.NumDeaths+"/";
                vacRecords  += item.NumVaccinated + "/";
@@ -97,22 +102,52 @@
                dateRecords += item.Date.ToString("d") + "-";
            }
 
-            deathString = '@deathRecords'
-            deathArray = deathString.split("/").reverse()
+            data =
+            {
+                'deaths': '@deathRecords'.split("/"),
+                'vaccinated': '@vacRecords'.split("/"),
+                'recovered': '@recRecords'.split("/"),
+                'newCases': '@newRecords'.split("/"),
+                'date': '@dateRecords'.split("-")
+            }
 
-            vacString = '@vacRecords'
-            vacArray = vacString.split("/").reverse()
+            console.log(data)
 
-            recString = '@recRecords'
-            recArray = recString.split("/").reverse()
+            allData = []
+            for (i = 0; i < data.date.length ;i++)
+            {
+                allData.push(
+                    {
+                        'date': data.date[i],
+                        'deaths': data.deaths[i],
+                        'vaccinated': data.vaccinated[i],
+                        'newCases': data.newCases[i],
+                        'recovered': data.recovered[i]
+                    }
+                )
+            }
 
-            newString = '@newRecords'
-            newArray = newString.split("/").reverse()
+            console.log(allData)
 
-            dateString = '@dateRecords'
-            console.log(dateString)
-            dateArray = dateString.split("-").reverse()
-            
+            allData.sort(function (a, b) {
+                return new Date(a.date) - new Date(b.date)
+            })
+
+            console.log(allData)
+
+            dateArray = []
+            deathArray = []
+            recArray = []
+            newArray = []
+            vacArray = []
+            for (i = 0; i < allData.length; i++) {
+                dateArray.push(allData[i].date)
+                deathArray.push(allData[i].deaths)
+                recArray.push(allData[i].recovered)
+                newArray.push(allData[i].newCases)
+                vacArray.push(allData[i].vaccinated)
+            }
+
 
             var myChart = document.getElementById("myChart")
             pieChart = new Chart(myChart, {
