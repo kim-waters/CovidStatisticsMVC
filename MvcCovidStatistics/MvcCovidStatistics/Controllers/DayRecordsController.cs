@@ -18,7 +18,7 @@ namespace MvcCovidStatistics.Controllers
 		}
 
 		// GET: DayRecords
-		public async Task<IActionResult> Index(string sortOrder)
+		public async Task<IActionResult> Index(string sortOrder, DateTime? searchDate)
 		{
 			ViewBag.DateSortParm = String.IsNullOrEmpty(sortOrder) ? "date_desc" : "";
 			ViewBag.VacSortParm = sortOrder == "vaccinated_desc" ? "vaccinated" : "vaccinated_desc";
@@ -28,6 +28,11 @@ namespace MvcCovidStatistics.Controllers
 
 			var dayRecord = from d in _context.DayRecords
 							select d;
+
+			if (searchDate.HasValue)
+			{
+				dayRecord = dayRecord.Where(d => d.Date == searchDate);
+			}
 
 			dayRecord = sortOrder switch
 			{
@@ -42,6 +47,7 @@ namespace MvcCovidStatistics.Controllers
 				"cases_desc" => dayRecord.OrderByDescending(d => d.NewCases),
 				_ => dayRecord.OrderBy(d => d.Date),
 			};
+
 			return View(await dayRecord.ToListAsync());
 		}
 
