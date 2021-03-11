@@ -12,20 +12,20 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Date)
+            <th>                
+                @Html.ActionLink(@Html.DisplayNameFor(model => model.Date), "Index", new { sortOrder = ViewBag.DateSortParm })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.NumVaccinated)
+                @Html.ActionLink(@Html.DisplayNameFor(model => model.NumVaccinated), "Index", new { sortOrder = ViewBag.VacSortParm })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.NumDeaths)
+                @Html.ActionLink(@Html.DisplayNameFor(model => model.NumDeaths), "Index", new { sortOrder = ViewBag.DeathSortParm })             
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.NumRecovered)
+                @Html.ActionLink(@Html.DisplayNameFor(model => model.NumRecovered), "Index", new { sortOrder = ViewBag.RecoverySortParm })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.NewCases)
+                @Html.ActionLink(@Html.DisplayNameFor(model => model.NewCases), "Index", new { sortOrder = ViewBag.CasesSortParm })
             </th>
             <th></th>
         </tr>
