@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using MvcCovidStatistics.Data;
 using MvcCovidStatistics.Models;
 
+using System.Data;
+
 namespace MvcCovidStatistics.Controllers
 {
     public class DayRecordsController : Controller
@@ -18,6 +20,7 @@ namespace MvcCovidStatistics.Controllers
         {
             _context = context;
         }
+
 
         // GET: DayRecords
         public async Task<IActionResult> Index()

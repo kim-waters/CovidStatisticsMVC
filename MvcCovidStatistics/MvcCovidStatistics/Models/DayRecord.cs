@@ -3,6 +3,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+
 namespace MvcCovidStatistics.Models
 {
     public class DayRecord
@@ -18,9 +19,8 @@ namespace MvcCovidStatistics.Models
         public int NumDeaths { get; set; }
         [Display(Name = "Number of recoveries")]
         public int NumRecovered { get; set; }
-        [Display(Name = "Newm cases")]
+        [Display(Name = "New cases")]
         public int NewCases { get; set; }
-
     }
 }
 

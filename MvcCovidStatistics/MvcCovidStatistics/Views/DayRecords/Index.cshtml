@@ -1,4 +1,8 @@
 ﻿@model IEnumerable<MvcCovidStatistics.Models.DayRecord>
+@using Microsoft.AspNetCore.Identity
+@using System.Web
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
 
 @{
     ViewData["Title"] = "Index";
@@ -6,54 +10,179 @@
 
 <h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Date)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NumVaccinated)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NumDeaths)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NumRecovered)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NewCases)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Date)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NumVaccinated)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NumDeaths)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NumRecovered)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NewCases)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+<h4>Cases</h4>
+<div id="container">
+    <canvas id="myChart"></canvas>
+</div>
+
+<h4>Vaccinations</h4>
+<div id="container">
+    <canvas id="vacChart"></canvas>
+</div>
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
 }
-    </tbody>
-</table>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Date)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NumVaccinated)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NumDeaths)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NumRecovered)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NewCases)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Date)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NumVaccinated)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NumDeaths)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NumRecovered)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NewCases)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <script>
+
+
+
+        window.onload = function () {
+           @{ 
+               string deathRecords = "";
+               string vacRecords = "";
+               string recRecords = "";
+               string newRecords = "";
+               string dateRecords = "";
+           }
+
+           @foreach(var item in Model)
+           {
+               deathRecords += item.NumDeaths+"/";
+               vacRecords  += item.NumVaccinated + "/";
+               recRecords += item.NumRecovered+ "/";
+               newRecords += item.NewCases + "/";
+               dateRecords += item.Date.ToString("d") + "-";
+           }
+
+            deathString = '@deathRecords'
+            deathArray = deathString.split("/").reverse()
+
+            vacString = '@vacRecords'
+            vacArray = vacString.split("/").reverse()
+
+            recString = '@recRecords'
+            recArray = recString.split("/").reverse()
+
+            newString = '@newRecords'
+            newArray = newString.split("/").reverse()
+
+            dateString = '@dateRecords'
+            console.log(dateString)
+            dateArray = dateString.split("-").reverse()
+            
+
+            var myChart = document.getElementById("myChart")
+            pieChart = new Chart(myChart, {
+                type: 'line',
+                data: {
+                    labels: dateArray,
+                    datasets: [
+                        {
+                            label: "Deaths",
+                            data: deathArray,
+                            backgroundColor:'red',
+                            hoverBackgroundColor: 'green'
+                        },
+                        {
+                            label: "Recovered",
+                            data: recArray,
+                            backgroundColor: 'green',
+                            hoverBackgroundColor: 'green'
+                        },
+                        {
+                            label: "New Cases",
+                            data: newArray,
+                            backgroundColor: 'yellow',
+                            hoverBackgroundColor: 'green'
+                        },
+
+                    ],
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: false,
+                                autoSkip: false
+                            }
+                        }]
+                    }
+                }
+            });
+
+            var myChart = document.getElementById("vacChart")
+            pieChart = new Chart(myChart, {
+                type: 'line',
+                data: {
+                    labels: dateArray,
+                    datasets: [
+                        {
+                            label: "Vaccinated",
+                            data: vacArray,
+                            backgroundColor: 'blue',
+                            hoverBackgroundColor: 'green'
+                        }
+                    ],
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true,
+                                autoSkip: false
+                            }
+                        }]
+                    }
+                }
+            });
+    }
+
+
+    </script>
