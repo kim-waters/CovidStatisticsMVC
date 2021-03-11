@@ -82,7 +82,7 @@ namespace MvcCovidStatistics.Models
                     new DayRecord
                     {
                         Date = DateTime.Now.AddDays(-7),
-                        NumVaccinated = 15000000,
+                        NumVaccinated = 12000000,
                         NumDeaths = 456,
                         NumRecovered = 21354,
                         NewCases = 26654,
