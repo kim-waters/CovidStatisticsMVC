@@ -16,7 +16,7 @@
             <canvas id="myChart"></canvas>
         </div>
     </div>
-  
+
     <div>
         <h4>Vaccinations</h4>
         <div id="container" style="height:250px">
@@ -30,17 +30,26 @@
     <a asp-action="Create">Create New</a>
 </p>
 
+@using (Html.BeginForm())
+{
+    <p>
+        Find by name: @Html.TextBox("searchDate")
+        <input type="submit" value="Search" />
+    </p>
+}
+
+
 <table class="table">
     <thead>
         <tr>
-            <th>                
+            <th>
                 @Html.ActionLink(@Html.DisplayNameFor(model => model.Date), "Index", new { sortOrder = ViewBag.DateSortParm })
             </th>
             <th>
                 @Html.ActionLink(@Html.DisplayNameFor(model => model.NumVaccinated), "Index", new { sortOrder = ViewBag.VacSortParm })
             </th>
             <th>
-                @Html.ActionLink(@Html.DisplayNameFor(model => model.NumDeaths), "Index", new { sortOrder = ViewBag.DeathSortParm })             
+                @Html.ActionLink(@Html.DisplayNameFor(model => model.NumDeaths), "Index", new { sortOrder = ViewBag.DeathSortParm })
             </th>
             <th>
                 @Html.ActionLink(@Html.DisplayNameFor(model => model.NumRecovered), "Index", new { sortOrder = ViewBag.RecoverySortParm })
@@ -80,7 +89,7 @@
     </tbody>
 </table>
 
-    <script>
+<script>
 
 
         window.onload = function () {
@@ -92,7 +101,7 @@
                string dateRecords = "";
            }
 
-            
+
         @foreach(var item in Model.OrderBy(d => d.Date))
         {
             deathRecords += item.NumDeaths+"/";
@@ -217,5 +226,5 @@
     }
 
 
-    </script>
+</script>
 

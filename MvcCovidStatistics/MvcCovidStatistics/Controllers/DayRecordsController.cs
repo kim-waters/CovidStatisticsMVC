@@ -3,14 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using MvcCovidStatistics.Data;
 using MvcCovidStatistics.Models;
 using System;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
-using System.Data;
-
 namespace MvcCovidStatistics.Controllers
 {
-
 	public class DayRecordsController : Controller
 	{
 		private readonly CovidDbContext _context;
@@ -34,7 +32,7 @@ namespace MvcCovidStatistics.Controllers
 
 			if (searchDate.HasValue)
 			{
-				dayRecord = dayRecord.Where (d => d.Date == searchDate);
+				dayRecord = dayRecord.Where(d => d.Date == searchDate);
 			}
 
 			dayRecord = sortOrder switch
@@ -180,4 +178,3 @@ namespace MvcCovidStatistics.Controllers
 		}
 	}
 }
-
