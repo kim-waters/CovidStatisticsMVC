@@ -94,13 +94,13 @@
 
             
         @foreach(var item in Model.OrderBy(d => d.Date))
-           {
-               deathRecords += item.NumDeaths+"/";
-               vacRecords  += item.NumVaccinated + "/";
-               recRecords += item.NumRecovered+ "/";
-               newRecords += item.NewCases + "/";
-               dateRecords += item.Date.ToString("d") + "-";
-           }
+        {
+            deathRecords += item.NumDeaths+"/";
+            vacRecords  += item.NumVaccinated + "/";
+            recRecords += item.NumRecovered+ "/";
+            newRecords += item.NewCases + "/";
+            dateRecords += item.Date.ToString("d") + "-";
+        }
 
             data =
             {
@@ -111,11 +111,11 @@
                 'date': '@dateRecords'.split("-")
             }
 
-            console.log(data)
 
             allData = []
             for (i = 0; i < data.date.length ;i++)
             {
+                if (data.date[i] == "") continue
                 allData.push(
                     {
                         'date': data.date[i],
@@ -127,13 +127,10 @@
                 )
             }
 
-            console.log(allData)
-
             allData.sort(function (a, b) {
                 return new Date(a.date) - new Date(b.date)
             })
 
-            console.log(allData)
 
             dateArray = []
             deathArray = []
