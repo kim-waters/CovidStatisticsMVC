@@ -8,8 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using MvcCovidStatistics.Data;
 using MvcCovidStatistics.Models;
 
-using FusionCharts.DataEngine;
-using FusionCharts.Visualization;
 using System.Data;
 
 namespace MvcCovidStatistics.Controllers
