@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using System.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MvcCovidStatistics.Controllers
 {
@@ -77,6 +78,7 @@ namespace MvcCovidStatistics.Controllers
 		// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
 		[HttpPost]
 		[ValidateAntiForgeryToken]
+		[Authorize]
 		public async Task<IActionResult> Create([Bind("Id,Date,NumVaccinated,NumDeaths,NumRecovered,NewCases")] DayRecord dayRecord)
 		{
 			if (ModelState.IsValid)
@@ -89,6 +91,7 @@ namespace MvcCovidStatistics.Controllers
 		}
 
 		// GET: DayRecords/Edit/5
+		[Authorize]
 		public async Task<IActionResult> Edit(int? id)
 		{
 			if (id == null)
@@ -109,6 +112,7 @@ namespace MvcCovidStatistics.Controllers
 		// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
 		[HttpPost]
 		[ValidateAntiForgeryToken]
+		[Authorize]
 		public async Task<IActionResult> Edit(int id, [Bind("Id,Date,NumVaccinated,NumDeaths,NumRecovered,NewCases")] DayRecord dayRecord)
 		{
 			if (id != dayRecord.Id)
@@ -140,6 +144,7 @@ namespace MvcCovidStatistics.Controllers
 		}
 
 		// GET: DayRecords/Delete/5
+		[Authorize]
 		public async Task<IActionResult> Delete(int? id)
 		{
 			if (id == null)
@@ -160,6 +165,7 @@ namespace MvcCovidStatistics.Controllers
 		// POST: DayRecords/Delete/5
 		[HttpPost, ActionName("Delete")]
 		[ValidateAntiForgeryToken]
+		[Authorize]
 		public async Task<IActionResult> DeleteConfirmed(int id)
 		{
 			var dayRecord = await _context.DayRecords.FindAsync(id);
