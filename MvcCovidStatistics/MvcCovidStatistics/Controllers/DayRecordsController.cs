@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MvcCovidStatistics.Data;
 using MvcCovidStatistics.Models;
@@ -6,8 +6,11 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
+using System.Data;
+
 namespace MvcCovidStatistics.Controllers
 {
+
 	public class DayRecordsController : Controller
 	{
 		private readonly CovidDbContext _context;
@@ -177,3 +180,4 @@ namespace MvcCovidStatistics.Controllers
 		}
 	}
 }
+

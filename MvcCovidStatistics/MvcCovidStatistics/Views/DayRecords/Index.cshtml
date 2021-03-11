@@ -1,10 +1,30 @@
 ﻿@model IEnumerable<MvcCovidStatistics.Models.DayRecord>
+@using Microsoft.AspNetCore.Identity
+@using System.Web
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
 
 @{
     ViewData["Title"] = "Index";
 }
 
 <h1>Index</h1>
+<div class="d-flex justify-content-around">
+    <div>
+        <h4>Cases</h4>
+        <div id="container" style="height:250px">
+            <canvas id="myChart"></canvas>
+        </div>
+    </div>
+  
+    <div>
+        <h4>Vaccinations</h4>
+        <div id="container" style="height:250px">
+            <canvas id="vacChart"></canvas>
+        </div>
+    </div>
+</div>
+
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -59,3 +79,143 @@
         }
     </tbody>
 </table>
+
+    <script>
+
+
+        window.onload = function () {
+           @{
+               string deathRecords = "";
+               string vacRecords = "";
+               string recRecords = "";
+               string newRecords = "";
+               string dateRecords = "";
+           }
+
+            
+        @foreach(var item in Model.OrderBy(d => d.Date))
+        {
+            deathRecords += item.NumDeaths+"/";
+            vacRecords  += item.NumVaccinated + "/";
+            recRecords += item.NumRecovered+ "/";
+            newRecords += item.NewCases + "/";
+            dateRecords += item.Date.ToString("d") + "-";
+        }
+
+            data =
+            {
+                'deaths': '@deathRecords'.split("/"),
+                'vaccinated': '@vacRecords'.split("/"),
+                'recovered': '@recRecords'.split("/"),
+                'newCases': '@newRecords'.split("/"),
+                'date': '@dateRecords'.split("-")
+            }
+
+
+            allData = []
+            for (i = 0; i < data.date.length ;i++)
+            {
+                if (data.date[i] == "") continue
+                allData.push(
+                    {
+                        'date': data.date[i],
+                        'deaths': data.deaths[i],
+                        'vaccinated': data.vaccinated[i],
+                        'newCases': data.newCases[i],
+                        'recovered': data.recovered[i]
+                    }
+                )
+            }
+
+            allData.sort(function (a, b) {
+                return new Date(a.date) - new Date(b.date)
+            })
+
+
+            dateArray = []
+            deathArray = []
+            recArray = []
+            newArray = []
+            vacArray = []
+            for (i = 0; i < allData.length; i++) {
+                dateArray.push(allData[i].date)
+                deathArray.push(allData[i].deaths)
+                recArray.push(allData[i].recovered)
+                newArray.push(allData[i].newCases)
+                vacArray.push(allData[i].vaccinated)
+            }
+
+
+            var myChart = document.getElementById("myChart")
+            pieChart = new Chart(myChart, {
+                type: 'line',
+                data: {
+                    labels: dateArray,
+                    datasets: [
+                        {
+                            label: "Deaths",
+                            data: deathArray,
+                            backgroundColor:'red',
+                            hoverBackgroundColor: 'green'
+                        },
+                        {
+                            label: "Recovered",
+                            data: recArray,
+                            backgroundColor: 'green',
+                            hoverBackgroundColor: 'green'
+                        },
+                        {
+                            label: "New Cases",
+                            data: newArray,
+                            backgroundColor: 'yellow',
+                            hoverBackgroundColor: 'green'
+                        },
+
+                    ],
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: false,
+                                autoSkip: false
+                            }
+                        }]
+                    }
+                }
+            });
+
+            var myChart = document.getElementById("vacChart")
+            pieChart = new Chart(myChart, {
+                type: 'line',
+                data: {
+                    labels: dateArray,
+                    datasets: [
+                        {
+                            label: "Vaccinated",
+                            data: vacArray,
+                            backgroundColor: 'blue',
+                            hoverBackgroundColor: 'green'
+                        }
+                    ],
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true,
+                                autoSkip: false
+                            }
+                        }]
+                    }
+                }
+            });
+    }
+
+
+    </script>
+
