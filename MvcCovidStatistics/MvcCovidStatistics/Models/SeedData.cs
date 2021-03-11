@@ -54,6 +54,38 @@ namespace MvcCovidStatistics.Models
                         NumDeaths = 268,
                         NumRecovered = 13224,
                         NewCases = 19029,
+                    },
+                    new DayRecord
+                    {
+                        Date = DateTime.Now.AddDays(-4),
+                        NumVaccinated = 16000000,
+                        NumDeaths = 334,
+                        NumRecovered = 15343,
+                        NewCases = 18902,
+                    },
+                    new DayRecord
+                    {
+                        Date = DateTime.Now.AddDays(-5),
+                        NumVaccinated = 15000000,
+                        NumDeaths = 352,
+                        NumRecovered = 17354,
+                        NewCases = 23654,
+                    },
+                    new DayRecord
+                    {
+                        Date = DateTime.Now.AddDays(-6),
+                        NumVaccinated = 14000000,
+                        NumDeaths = 415,
+                        NumRecovered = 19324,
+                        NewCases = 26345,
+                    },
+                    new DayRecord
+                    {
+                        Date = DateTime.Now.AddDays(-7),
+                        NumVaccinated = 15000000,
+                        NumDeaths = 456,
+                        NumRecovered = 21354,
+                        NewCases = 26654,
                     }
                     );
 
