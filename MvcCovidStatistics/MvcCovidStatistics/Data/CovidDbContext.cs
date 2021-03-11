@@ -3,14 +3,16 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using MvcCovidStatistics.Models;
 
 namespace MvcCovidStatistics.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class CovidDbContext : IdentityDbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        public CovidDbContext(DbContextOptions<CovidDbContext> options)
             : base(options)
         {
         }
+        public DbSet<DayRecord> DayRecords { get; set; }
     }
 }
