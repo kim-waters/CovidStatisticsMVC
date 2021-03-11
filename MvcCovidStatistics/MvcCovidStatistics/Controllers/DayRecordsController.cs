@@ -34,7 +34,7 @@ namespace MvcCovidStatistics.Controllers
 
 			if (searchDate.HasValue)
 			{
-				dayRecord = dayRecord.Where(d => d.Date == searchDate);
+				dayRecord = dayRecord.Where (d => d.Date == searchDate);
 			}
 
 			dayRecord = sortOrder switch
