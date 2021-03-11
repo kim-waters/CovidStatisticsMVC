@@ -21,7 +21,6 @@ namespace MvcCovidStatistics.Models
         public int NumRecovered { get; set; }
         [Display(Name = "New cases")]
         public int NewCases { get; set; }
-
     }
 }
 
