@@ -29,16 +29,16 @@ namespace MvcCovidStatistics.Controllers
 			ViewBag.RecoverySortParm = sortOrder == "recovery_desc" ? "recovery" : "recovery_desc";
 			ViewBag.CasesSortParm = sortOrder == "cases_desc" ? "cases" : "cases_desc";
 
-			if (searchDate != null)
-			{
-				page = 1;
-			}
-			else
-			{
-				searchDate = currentFilter;
-			}
+            if (searchDate != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchDate = currentFilter;
+            }
 
-			ViewBag.CurrentFilter = searchDate;
+            ViewBag.CurrentFilter = searchDate;
 
 			var dayRecord = from d in _context.DayRecords
 							select d;
@@ -62,10 +62,10 @@ namespace MvcCovidStatistics.Controllers
 				_ => dayRecord.OrderBy(d => d.Date),
 			};
 
-			int pageSize = 3;
-			int pageNumber = (page ?? 1);
+            int pageSize = 5;
+            int pageNumber = (page ?? 1);
 
-			return View(await dayRecord.ToPagedListAsync(pageNumber, pageSize));
+            return View(await dayRecord.ToPagedListAsync(pageNumber, pageSize));
 		}
 
 		// GET: DayRecords/Details/5
