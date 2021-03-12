@@ -6,6 +6,7 @@ using System;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using X.PagedList;
 
 namespace MvcCovidStatistics.Controllers
 {
@@ -19,13 +20,25 @@ namespace MvcCovidStatistics.Controllers
 		}
 
 		// GET: DayRecords
-		public async Task<IActionResult> Index(string sortOrder, DateTime? searchDate)
+		public async Task<IActionResult> Index(string sortOrder, DateTime? searchDate, DateTime? currentFilter, int? page)
 		{
+			ViewBag.CurrentSort = sortOrder;			
 			ViewBag.DateSortParm = String.IsNullOrEmpty(sortOrder) ? "date_desc" : "";
 			ViewBag.VacSortParm = sortOrder == "vaccinated_desc" ? "vaccinated" : "vaccinated_desc";
 			ViewBag.DeathSortParm = sortOrder == "deaths_desc" ? "deaths" : "deaths_desc";
 			ViewBag.RecoverySortParm = sortOrder == "recovery_desc" ? "recovery" : "recovery_desc";
 			ViewBag.CasesSortParm = sortOrder == "cases_desc" ? "cases" : "cases_desc";
+
+            if (searchDate != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchDate = currentFilter;
+            }
+
+            ViewBag.CurrentFilter = searchDate;
 
 			var dayRecord = from d in _context.DayRecords
 							select d;
@@ -49,7 +62,10 @@ namespace MvcCovidStatistics.Controllers
 				_ => dayRecord.OrderBy(d => d.Date),
 			};
 
-			return View(await dayRecord.ToListAsync());
+            int pageSize = 5;
+            int pageNumber = (page ?? 1);
+
+            return View(await dayRecord.ToPagedListAsync(pageNumber, pageSize));
 		}
 
 		// GET: DayRecords/Details/5

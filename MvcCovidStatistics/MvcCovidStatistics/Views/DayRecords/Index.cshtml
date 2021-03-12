@@ -1,8 +1,11 @@
-﻿@model IEnumerable<MvcCovidStatistics.Models.DayRecord>
+﻿@model X.PagedList.IPagedList<MvcCovidStatistics.Models.DayRecord>
+@*@model IEnumerable<MvcCovidStatistics.Models.DayRecord>*@
+@using X.PagedList.Mvc.Core;
 @using Microsoft.AspNetCore.Identity
-@using System.Web
+@using System.Web;
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
+@*<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />*@
 
 @{
     ViewData["Title"] = "Index";
@@ -26,70 +29,77 @@
 </div>
 
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-
-@using (Html.BeginForm())
-{
     <p>
-        Find by name: @Html.TextBox("searchDate")
-        <input type="submit" value="Search" />
+        <a asp-action="Create">Create New</a>
     </p>
-}
+
+    @using (Html.BeginForm())
+    {
+        <p>
+            Find by Date: @Html.TextBox("searchDate")
+            <input type="submit" value="Search" />
+        </p>
+    }
 
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.ActionLink(@Html.DisplayNameFor(model => model.Date), "Index", new { sortOrder = ViewBag.DateSortParm })
-            </th>
-            <th>
-                @Html.ActionLink(@Html.DisplayNameFor(model => model.NumVaccinated), "Index", new { sortOrder = ViewBag.VacSortParm })
-            </th>
-            <th>
-                @Html.ActionLink(@Html.DisplayNameFor(model => model.NumDeaths), "Index", new { sortOrder = ViewBag.DeathSortParm })
-            </th>
-            <th>
-                @Html.ActionLink(@Html.DisplayNameFor(model => model.NumRecovered), "Index", new { sortOrder = ViewBag.RecoverySortParm })
-            </th>
-            <th>
-                @Html.ActionLink(@Html.DisplayNameFor(model => model.NewCases), "Index", new { sortOrder = ViewBag.CasesSortParm })
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+    <table class="table">
+        <thead>
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Date)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NumVaccinated)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NumDeaths)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NumRecovered)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NewCases)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
+                <th>
+                    @Html.ActionLink("Date", "Index", new { sortOrder = ViewBag.DateSortParm, currentFilter = ViewBag.CurrentFilter })
+                </th>
+                <th>
+                    @Html.ActionLink("Number of people vaccinated", "Index", new { sortOrder = ViewBag.VacSortParm, currentFilter = ViewBag.CurrentFilter })
+                </th>
+                <th>
+                    @Html.ActionLink("Number of deaths", "Index", new { sortOrder = ViewBag.DeathSortParm, currentFilter = ViewBag.CurrentFilter })
+                </th>
+                <th>
+                    @Html.ActionLink("Number of recoveries", "Index", new { sortOrder = ViewBag.RecoverySortParm, currentFilter = ViewBag.CurrentFilter })
+                </th>
+                <th>
+                    @Html.ActionLink("New cases", "Index", new { sortOrder = ViewBag.CasesSortParm, currentFilter = ViewBag.CurrentFilter })
+                </th>
+                <th></th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Date)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NumVaccinated)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NumDeaths)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NumRecovered)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NewCases)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 
-<script>
+    <br />
+
+    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+    @Html.PagedListPager(Model, page => Url.Action("Index",
+        new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+
+    <script>
 
 
         window.onload = function () {
@@ -102,7 +112,7 @@
            }
 
 
-        @foreach(var item in Model.OrderBy(d => d.Date))
+        @foreach(var item in ViewData.Model.OrderBy(d => d.Date))
         {
             deathRecords += item.NumDeaths+"/";
             vacRecords  += item.NumVaccinated + "/";
@@ -111,7 +121,10 @@
             dateRecords += item.Date.ToString("d") + "-";
         }
 
-            data =
+            x = '@ViewBag'
+            console.log(x)
+
+                data =
             {
                 'deaths': '@deathRecords'.split("/"),
                 'vaccinated': '@vacRecords'.split("/"),
@@ -119,6 +132,8 @@
                 'newCases': '@newRecords'.split("/"),
                 'date': '@dateRecords'.split("-")
             }
+
+            console.log(data)
 
 
             allData = []
@@ -226,5 +241,5 @@
     }
 
 
-</script>
+    </script>
 
